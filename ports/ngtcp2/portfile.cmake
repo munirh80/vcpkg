@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 0fa71544d70080ed9b0373383aaf985c7ed162913a480371affb3131cb3bb55e9a9653896da3801f5b1d121fc654232f5e463298f8070413f309bb4a514898f8
+    SHA512 cd2936c9552d2014b9843f4007f9ca780c3c89038420ea9a1bdb301c3bb6704a0963e1ed79fc6c39f0a04fe5442ba7b26be0eca9bbd0092dd820c239b26cf627
     HEAD_REF main
 )
 
@@ -13,7 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         wolfssl  ENABLE_WOLFSSL
         gnutls   ENABLE_GNUTLS
-        libressl ENABLE_OPENSSL
+        openssl  ENABLE_OPENSSL
 )
 
 vcpkg_cmake_configure(
@@ -36,5 +36,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ngtcp2/ngtcp2.h"
+        "#ifdef NGTCP2_STATICLIB"
+        "#if 1"
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

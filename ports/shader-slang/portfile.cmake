@@ -17,7 +17,7 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 9db0740a329c0bc55940229da064adff7c73d88774fc9d803556ba5ca1c283757021161a4fbd14d98dcd20918905950e35ed5961302da31021abcd4e5a3d9d6a
+		SHA512 82533b688e100a1aba34be4ae5ef30cda158d7bb7f06f7f6d02a9d3b08b69277f4edc6650ed60967162b812835c9c8b5a85defb21aef0012a00dad5344340111
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -25,39 +25,31 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 8832564b301227a19bab2ae18a93b0e97f6d93c1cf0adfdab71083d70a4ff05cef774eae7d109aa692d32da5dfc701015b5e672100dda33b7dcee5b53cf0a287
+		SHA512 4962ec98bf61bb15296697681d8070a59c916eb583831bfc611684cbbf459b17e197c068862357bb7cf7160d14548a01c206723338c8e576db4103fe7dce6778
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
-	# https://github.com/shader-slang/slang/issues/5648
-	set(VERSION_BACKUP ${VERSION})
-	string(REPLACE "2024.14.6" "2024.14.4" VERSION "${VERSION}")
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 94bc9e6ce70966033cda5478ef10f811a84587e04cb193c2c7b75107240c4ea1917b3d0c4c625524a1883514ff42883ae12d33ed954254f09a5c2d2d08e51077
+		SHA512 04f23543163bba57e68f130ee67e0de2a405b7d69f2a04c1a115432bd4b18e8ce93d6ae146616e06843bac9bbf6eaec315e05c021faa0dc383a870df1e5649ef
 	)
-	set(VERSION ${VERSION_BACKUP})
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
-	# https://github.com/shader-slang/slang/issues/5648
-	set(VERSION_BACKUP ${VERSION})
-	string(REPLACE "2024.14.6" "2024.14.4" VERSION "${VERSION}")
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 b298389dbc2d4e7c9054474bff09903aedc08d0b959dc6bdd052cf76ad78a10f7dc2c8b325b29a6aebbe0df0fdb639beb00d5d3480c614351e8259576f0936d5
+		SHA512 1f62de8a8f8b364c2b45dd1cd4781ebd3823fde4ca81b560a068638ac6662e6ef1143cd9f161bd401185a2b2a3df4b553b14c10e8fd042babbe057456cf17226
 	)
-	set(VERSION ${VERSION_BACKUP})
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 	vcpkg_download_distfile(
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 38921820796717531bcc419fb0e56eedaaaee240ec55feb69bb8c08a8e2e0dcc6be38e0874f0515cc02f7854d825cf9b68506fe50e2073f358bf438376761b1f
+		SHA512 9f13335f5d5599fab5c4ba17ee6003542f41e925e9f4b0c9695910d6012072cd0350a5b5e1e745c97375ece98cd9b3e4ca694c4160a74b0cf33309864186d4f7
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -65,7 +57,7 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 3218a276ee48349c6ed11735cd2bb3aa207ee33c4bbd1d4a04eff5addbe9a4733f7ac5dee47bbfc5c4731733708555c2dd7de6de3e7ad873c84e330867110289
+		SHA512 2b8b42c2ada7dc76e246a5668d01a416a99ebe2bcececabdbc43733ffe30ce743c4607ba84ce5e2682702ffd26f84ef2928c5f5a3a2cef860eaa15c384b7ee47
 	)
 endif()
 if(NOT ARCHIVE)
@@ -118,10 +110,24 @@ endif()
 
 # Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
 file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
-vcpkg_copy_tools(TOOL_NAMES slangc slangd SEARCH_DIR "${BINDIST_PATH}/bin")
+vcpkg_copy_tools(TOOL_NAMES slangc slangd slangi SEARCH_DIR "${BINDIST_PATH}/bin")
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
 file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+block(SCOPE_FOR VARIABLES)
+	set(VCPKG_BUILD_TYPE Release) # no debug binaries anyways
+	file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
+	vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfig.cmake"
+		[[HINTS ENV PATH "${PACKAGE_PREFIX_DIR}/bin"]]
+		[[PATHS "${PACKAGE_PREFIX_DIR}/tools/shader-slang" NO_DEFAULT_PATH REQUIRED]]
+	)
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfigVersion.cmake"
+		[[if("${CMAKE_SIZEOF_VOID_P}" STREQUAL ""]]
+		[[if(#[=[ host tool ]=] "TRUE"]] 
+	)
+endblock()
 
 vcpkg_install_copyright(
 	FILE_LIST "${BINDIST_PATH}/LICENSE"
